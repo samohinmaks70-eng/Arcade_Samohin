@@ -1,0 +1,139 @@
+import pygame
+import random
+
+pygame.init()
+
+# Код, описывающий окно программы
+WIDTH = 1060
+HEIGHT = 580
+
+
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+nest = pygame.image.load('nest.png')
+egg_img = pygame.image.load('egg.png')
+num_iter = 0
+num_frame = 0
+img_list = []
+img_list1 = []
+x = 50
+y = 10
+x1 = HEIGHT // 2
+y1 = 450
+bg = pygame.image.load('fon_1.png')
+for i in range(10):
+    img_list1.append(pygame.image.load('eagle_L' + str(i) + '.png'))
+for i in range(10):
+    img_list.append(pygame.image.load('eagle' + str(i) + '.png'))
+eagle_width = 271
+eagle_height = 200
+
+egg_width = egg_img.get_width()
+egg_height = egg_img.get_height()
+
+nest_width = nest.get_width()
+nest_height = nest.get_height()
+# Создаём контроль FPS
+clock = pygame.time.Clock()
+FPS = 30
+slow = 3
+
+speed1 = 5
+speed = 5
+move_x = 0
+direction_change_chance = 0.05
+current_direction = 1
+# Яйцо
+egg_x = 0
+egg_y = 0
+egg_speed = 7
+egg_falling = False
+egg_ready = True
+
+count_shoots = 0
+count_goals = 0
+
+font = pygame.font.SysFont(None, 35)
+text_g = font.render(f'Попадания - {count_goals}',True, (255, 255, 0))
+text_sh = font.render(f'Попытки - {count_shoots}',True, (255, 255, 0))
+
+game_run = True
+while game_run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_d:
+                move_x = 1
+            if event.key == pygame.K_a:
+                move_x = -1
+            # Проверка на нажатие пробела происходит здесь, независимо от A/D
+            if event.key == pygame.K_SPACE and egg_ready:
+                egg_falling = True
+                egg_ready = False
+                # Откуда падает яйцо. Учитываем центр орла.
+                egg_x = x + eagle_width // 2 - egg_width // 2
+                egg_y = y + eagle_height // 2
+                count_shoots += 1
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_d:
+                if move_x == 1:
+                    move_x = 0
+            if event.key == pygame.K_a:
+                if move_x == -1:
+                    move_x = 0
+
+    num_iter += 1
+    num_frame = num_iter // slow % 9
+
+    if random.random() < direction_change_chance:
+        current_direction *= -1
+
+    x1 += speed1 * current_direction
+
+    if x1 < 0:
+        x1 = 0
+        current_direction = 1
+    elif x1 > WIDTH - nest_width:
+        x1 = WIDTH - nest_width
+        current_direction = -1
+
+    if egg_falling:
+        egg_y += egg_speed
+
+        # Проверка столкновения с nest и выходом за границы окна
+        if egg_x + egg_width > x1 and egg_x < x1 + nest_width and egg_y + egg_height > y1 and egg_y < y1 + nest_height:
+            egg_falling = False
+            egg_ready = True
+            count_goals += 1
+        elif egg_y > HEIGHT:
+            egg_falling = False
+            egg_ready = True
+
+    screen.blit(bg, (0, 0))
+    screen.blit(nest, (x1, y1))
+    x += speed * move_x  # Двигаем eagle
+
+    # Ограничение по краям экрана - ВАЖНО ПЕРЕД ОТРИСОВКОЙ!
+
+    if x < 0:
+        x = 0
+    elif x > WIDTH - eagle_width:
+        x = WIDTH - eagle_width
+
+    if move_x == -1:
+        screen.blit(img_list1[num_frame], (x, y))
+    else:
+        screen.blit(img_list[num_frame], (x, y))
+
+    if egg_falling:
+        screen.blit(egg_img, (egg_x, egg_y))
+    
+    screen.blit(font.render(f'Попадания - {count_goals}',True, (0, 0, 0)), (WIDTH - 200, 10))
+    screen.blit(font.render(f'Попытки - {count_shoots}',True, (0, 0, 0)), (WIDTH - 200, 60))
+
+    pygame.display.flip()
+    clock.tick(FPS)
+
+pygame.quit()
