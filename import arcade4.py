@@ -52,6 +52,36 @@ class StartView(arcade.View):
             self.window.show_view(game_view)
 
 
+class EndView(arcade.View):
+
+    def __init__(self):
+        super().__init__()
+        arcade.set_background_color(arcade.color.WHITE)
+
+        self.home_sprite = None
+
+        self.settings = None
+
+    def setup(self):
+
+        self.home_sprite = arcade.Sprite(HOME_IMAGE, 0.8)
+        self.home_sprite.center_x = SCREEN_WIDTH // 2
+        self.home_sprite.center_y = SCREEN_HEIGHT // 2
+
+
+    def on_draw(self):
+        self.clear()
+
+        arcade.draw_sprite(self.home_sprite)
+        
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """Начало игры при нажатии клавиши"""
+        if self.home_sprite.left <= x <= self.home_sprite.right and self.home_sprite.bottom <= y <= self.home_sprite.top:
+            game_view = StartView()
+            game_view.setup()
+            self.window.show_view(game_view)
+
 class SelectLevel(arcade.View):
     def __init__(self):
         super().__init__()
@@ -90,15 +120,15 @@ class SelectLevel(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.level1_sprite.left <= x <= self.level1_sprite.right and self.level1_sprite.bottom <= y <= self.level1_sprite.top:
-            game_view = EggThrower()
+            game_view = EggThrower(4)
             game_view.setup()
             self.window.show_view(game_view)
         elif self.level2_sprite.left <= x <= self.level2_sprite.right and self.level2_sprite.bottom <= y <= self.level2_sprite.top:
-            game_view = EggThrower()
+            game_view = EggThrower(5)
             game_view.setup()
             self.window.show_view(game_view)
         elif self.level3_sprite.left <= x <= self.level3_sprite.right and self.level3_sprite.bottom <= y <= self.level3_sprite.top:
-            game_view = EggThrower()
+            game_view = EggThrower(6)
             game_view.setup()
             self.window.show_view(game_view)
         elif self.menu_sprite.left <= x <= self.menu_sprite.right and self.menu_sprite.bottom <= y <= self.menu_sprite.top:
@@ -108,7 +138,7 @@ class SelectLevel(arcade.View):
         
 
 class EggThrower(arcade.View):
-    def __init__(self):
+    def __init__(self, speed):
         super().__init__()
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -124,7 +154,7 @@ class EggThrower(arcade.View):
         self.egg_sprite = None
 
         # Другие переменные
-        self.count_shoots = 0
+        self.count_shoots = 3
         self.count_goals = 0
         self.egg_falling = False
         self.egg_ready = True
@@ -134,6 +164,7 @@ class EggThrower(arcade.View):
         self.num_frame = 0
         self.egg_y = None
         self.egg_x = None
+        self.nest_speed = speed
 
         # Загрузка звука
         self.music = None  # Добавлено инициализацию
@@ -189,7 +220,7 @@ class EggThrower(arcade.View):
         
 
         # Отрисовка счета
-        arcade.draw_text(f"Попадания - {self.count_goals}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
+        arcade.draw_text(f"Попытки - {self.count_goals}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
         arcade.draw_text(f"Попытки - {self.count_shoots}", SCREEN_WIDTH - 300, 480, arcade.color.BLACK, 35)
 
     def on_update(self, delta_time):
@@ -201,7 +232,7 @@ class EggThrower(arcade.View):
             self.current_direction *= -1
 
         # Движение гнезда
-        self.nest_sprite.center_x += 5 * self.current_direction
+        self.nest_sprite.center_x += self.nest_speed * self.current_direction
 
         # Ограничение движения гнезда
         if self.nest_sprite.left < 0:
@@ -210,6 +241,15 @@ class EggThrower(arcade.View):
         elif self.nest_sprite.right > SCREEN_WIDTH:
             self.nest_sprite.right = SCREEN_WIDTH
             self.current_direction = -1
+
+
+        #Экран окончания
+
+
+        if self.count_shoots == 0:
+            game_view = EndView()
+            game_view.setup()
+            self.window.show_view(game_view)
 
         # Движение яйца
 
@@ -229,6 +269,7 @@ class EggThrower(arcade.View):
             elif self.egg_y < 0:
                 self.egg_falling = False
                 self.egg_ready = True
+                self.count_shoots -= 1
                 self.egg_sprite.center_y = 500
 
         # Движение орла
@@ -256,7 +297,6 @@ class EggThrower(arcade.View):
             self.egg_ready = False
             self.egg_x = self.eagle_list[self.num_frame].center_x
             self.egg_y = self.eagle_list[self.num_frame].center_y
-            self.count_shoots += 1
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.D:
