@@ -54,11 +54,13 @@ class StartView(arcade.View):
 
 class EndView(arcade.View):
 
-    def __init__(self):
+    def __init__(self, rec):
         super().__init__()
         arcade.set_background_color(arcade.color.WHITE)
 
         self.home_sprite = None
+
+        self.rec = rec
 
         self.settings = None
 
@@ -73,6 +75,9 @@ class EndView(arcade.View):
         self.clear()
 
         arcade.draw_sprite(self.home_sprite)
+
+        arcade.draw_text(f"Рекорд - {self.rec}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
+
         
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -166,6 +171,9 @@ class EggThrower(arcade.View):
         self.egg_x = None
         self.nest_speed = speed
 
+        self.cont = None
+        self.num = None
+
         # Загрузка звука
         self.music = None  # Добавлено инициализацию
 
@@ -220,7 +228,7 @@ class EggThrower(arcade.View):
         
 
         # Отрисовка счета
-        arcade.draw_text(f"Попытки - {self.count_goals}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
+        arcade.draw_text(f"Попадания - {self.count_goals}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
         arcade.draw_text(f"Попытки - {self.count_shoots}", SCREEN_WIDTH - 300, 480, arcade.color.BLACK, 35)
 
     def on_update(self, delta_time):
@@ -247,7 +255,7 @@ class EggThrower(arcade.View):
 
 
         if self.count_shoots == 0:
-            game_view = EndView()
+            game_view = EndView(self.num)
             game_view.setup()
             self.window.show_view(game_view)
 
@@ -284,6 +292,57 @@ class EggThrower(arcade.View):
             self.eagle_x = self.eagle_left_list[self.num_frame].width // 2
         elif self.eagle_list[self.num_frame].right > SCREEN_WIDTH:
             self.eagle_x = SCREEN_WIDTH - self.eagle_list[self.num_frame].width // 2
+
+        if self.nest_speed == 4:
+    # Читаем рекорд
+            try:
+                with open('lvl1.txt', 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                    if content:
+                        self.num = int(content)
+                    else:
+                        self.num = 0
+            except FileNotFoundError:
+                self.num = 0
+
+            # Если текущий счёт больше или равен рекорду — обновляем
+            if self.count_goals > self.num:
+                with open('lvl1.txt', 'w', encoding='utf-8') as f:
+                    f.write(str(self.count_goals))
+                self.num = self.count_goals  # обновляем рекорд в памяти
+
+        elif self.nest_speed == 5:
+            try:
+                with open('lvl2.txt', 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                    if content:
+                        self.num = int(content)
+                    else:
+                        self.num = 0
+            except FileNotFoundError:
+                self.num = 0
+
+            if self.count_goals > self.num:
+                with open('lvl2.txt', 'w', encoding='utf-8') as f:
+                    f.write(str(self.count_goals))
+                self.num = self.count_goals
+
+        elif self.nest_speed == 6:
+            try:
+                with open('lvl3.txt', 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                    if content:
+                        self.num = int(content)
+                    else:
+                        self.num = 0
+            except FileNotFoundError:
+                self.num = 0
+
+            if self.count_goals > self.num:
+                with open('lvl3.txt', 'w', encoding='utf-8') as f:
+                    f.write(str(self.count_goals))
+                self.num = self.count_goals
+
 
     def on_key_press(self, key, modifiers):
         # Движение орла
