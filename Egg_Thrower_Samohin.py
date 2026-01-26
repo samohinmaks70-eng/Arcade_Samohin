@@ -8,18 +8,18 @@ SCREEN_HEIGHT = 580
 SCREEN_TITLE = "Egg Thrower"
 
 # Пути к изображениям
-NEST_IMAGE = "nest.png"
-EGG_IMAGE = "egg.png"
-EAGLE_IMAGE_PREFIX = "eagle"
-EAGLE_LEFT_IMAGE_PREFIX = "eagle_L"
-BACKGROUND_IMAGE = "fon_1.png"
-LOGO_IMAGE = "logo.png"
-MUSIC_FILE = "music.mp3"
-LEVEL_IMAGE = "select_level.png"
-LEVEL1_IMAGE = "level1.png"
-LEVEL2_IMAGE = "level2.png"
-LEVEL3_IMAGE = "level3.png"
-HOME_IMAGE = "home.png"
+NEST_IMAGE = "assets/nest.png"
+EGG_IMAGE = "assets/egg.png"
+EAGLE_IMAGE_PREFIX = "assets/eagle"
+EAGLE_LEFT_IMAGE_PREFIX = "assets/eagle_L"
+BACKGROUND_IMAGE = "assets/fon_1.png"
+LOGO_IMAGE = "assets/logo.png"
+MUSIC_FILE = "assets/music.mp3"
+LEVEL_IMAGE = "assets/select_level.png"
+LEVEL1_IMAGE = "assets/level1.png"
+LEVEL2_IMAGE = "assets/level2.png"
+LEVEL3_IMAGE = "assets/level3.png"
+HOME_IMAGE = "assets/home.png"
 
 class StartView(arcade.View):
 
@@ -110,19 +110,19 @@ class SelectLevel(arcade.View):
 
     def setup(self):
 
-        self.level1_sprite = arcade.Sprite(LEVEL1_IMAGE, 0.4)
+        self.level1_sprite = arcade.Sprite(LEVEL1_IMAGE, 0.35)
         self.level1_sprite.center_x = SCREEN_WIDTH // 2
         self.level1_sprite.center_y = SCREEN_HEIGHT // 9 * 8
 
-        self.level2_sprite = arcade.Sprite(LEVEL2_IMAGE, 0.4)
+        self.level2_sprite = arcade.Sprite(LEVEL2_IMAGE, 0.35)
         self.level2_sprite.center_x = SCREEN_WIDTH // 2
         self.level2_sprite.center_y = SCREEN_HEIGHT // 9 * 6
 
-        self.level3_sprite = arcade.Sprite(LEVEL3_IMAGE, 0.4)
+        self.level3_sprite = arcade.Sprite(LEVEL3_IMAGE, 0.35)
         self.level3_sprite.center_x = SCREEN_WIDTH // 2
         self.level3_sprite.center_y = SCREEN_HEIGHT // 9 * 4
 
-        self.menu_sprite = arcade.Sprite(HOME_IMAGE, 0.4)
+        self.menu_sprite = arcade.Sprite(HOME_IMAGE, 0.35)
         self.menu_sprite.center_x = SCREEN_WIDTH // 2
         self.menu_sprite.center_y = SCREEN_HEIGHT // 9 * 2
 
