@@ -31,6 +31,8 @@ class StartView(arcade.View):
 
         self.settings = None
 
+        self.bg = self.texture = arcade.load_texture(BACKGROUND_IMAGE)
+
     def setup(self):
 
         self.level_sprite = arcade.Sprite(LEVEL_IMAGE, 0.75)
@@ -41,7 +43,10 @@ class StartView(arcade.View):
     def on_draw(self):
         self.clear()
 
+        arcade.draw_texture_rect(self.bg, arcade.rect.XYWH(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, SCREEN_WIDTH, SCREEN_HEIGHT))
+
         arcade.draw_sprite(self.level_sprite)
+
         
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -64,6 +69,8 @@ class EndView(arcade.View):
 
         self.settings = None
 
+        self.bg = self.texture = arcade.load_texture(BACKGROUND_IMAGE)
+
     def setup(self):
 
         self.home_sprite = arcade.Sprite(HOME_IMAGE, 0.8)
@@ -74,9 +81,12 @@ class EndView(arcade.View):
     def on_draw(self):
         self.clear()
 
+        arcade.draw_texture_rect(self.bg, arcade.rect.XYWH(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, SCREEN_WIDTH, SCREEN_HEIGHT))
+
         arcade.draw_sprite(self.home_sprite)
 
         arcade.draw_text(f"Рекорд - {self.rec}", SCREEN_WIDTH - 300, 530, arcade.color.BLACK, 35)
+
 
         
 
@@ -95,6 +105,8 @@ class SelectLevel(arcade.View):
         self.level2_sprite = None
         self.level3_sprite = None
         self.menu_sprite = None
+
+        self.bg = self.texture = arcade.load_texture(BACKGROUND_IMAGE)
 
     def setup(self):
 
@@ -117,6 +129,8 @@ class SelectLevel(arcade.View):
     def on_draw(self):
 
         self.clear()
+
+        arcade.draw_texture_rect(self.bg, arcade.rect.XYWH(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, SCREEN_WIDTH, SCREEN_HEIGHT))
         
         arcade.draw_sprite(self.level1_sprite)
         arcade.draw_sprite(self.level2_sprite)
