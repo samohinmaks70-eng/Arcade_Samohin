@@ -15,7 +15,7 @@ EAGLE_LEFT_IMAGE_PREFIX = "eagle_L"
 BACKGROUND_IMAGE = "fon_1.png"
 LOGO_IMAGE = "logo.png"
 MUSIC_FILE = "music.mp3"
-LEVEL_IMAGE = "level_select.png"
+LEVEL_IMAGE = "select_level.png"
 LEVEL1_IMAGE = "level1.png"
 LEVEL2_IMAGE = "level2.png"
 LEVEL3_IMAGE = "level3.png"
@@ -33,7 +33,7 @@ class StartView(arcade.View):
 
     def setup(self):
 
-        self.level_sprite = arcade.Sprite(LEVEL_IMAGE)
+        self.level_sprite = arcade.Sprite(LEVEL_IMAGE, 0.75)
         self.level_sprite.center_x = SCREEN_WIDTH // 2
         self.level_sprite.center_y = SCREEN_HEIGHT // 2
 
